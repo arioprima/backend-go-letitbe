@@ -27,8 +27,12 @@ jobs:
     steps:
       - name: Deploy
         run: |
-          echo "$SSH_PRIVATE_KEY" > deploy_key
-          chmod 600 deploy_key
-          scp -i deploy_key main arioprima@103.127.97.105:/var/www/golang/letitbe/letitbe/
+          echo "$YOUR_SSH_PRIVATE_KEY" > deploy_key.pem
+          chmod 600 deploy_key.pem
+          ssh -i deploy_key.pem arioprima@103.127.97.105 "cd /var/www/golang/letitbe/letitbe/ && ./main"
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          YOUR_SSH_PRIVATE_KEY: |
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOF8fffH3dlr9hLXLQ+LU1igzfg7ROJ/b0u9AUQ0P0aSsYYXsiUMWI+Yg0tuiSBNGYeZcDUiBAHZ33CeBK4o+mpTcPENN+EFbjlwyqME22jyvm2cwV/GZX9ZhemMZBuwg8RzKseVcYTkr/i3dY40ulAYLuWZU0G+uhYzDb1+KuDOeDHvDoVFj3qT3g3DRHzKw9hsYCtd4wXd9hoAqGLr2aFaHRK5OGJbV9Bb9/auAmv/2BicmDC2WzQL+oWNPfkbyG6pS+NSp2pHZsBq3bBMNs6NPRuuDdejDLtxvs3ZFh4HkRPMlvJnhSn6/6k0OD530L68l1/labkGYtxzhw6Psb
+            -----END OPENSSH PRIVATE KEY-----
+
