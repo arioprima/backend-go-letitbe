@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Deploy
         run: |
-          echo "$YOUR_SSH_PRIVATE_KEY" > deploy_key.pem
+          echo "$YOUR_SSH_PRIVATE_KEY" > letitbe.pem
           chmod 600 deploy_key.pem
           mkdir -p $HOME/.ssh
           touch $HOME/.ssh/known_hosts
