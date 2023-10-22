@@ -16,7 +16,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.21.1 # Sesuaikan versi Go yang Anda gunakan
+          go-version: 1.17 # Set the Go version you want to use
 
       - name: Build
         run: go build -o main
@@ -32,19 +32,21 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest  # Gunakan runner Ubuntu atau sesuaikan dengan yang sesuai
+    runs-on: ubuntu-latest
+    environment:
+      name: 'Development'
+      url: ${{ secrets.AZURE_WEBAPP_URL }} # Update with your environment variable
 
     steps:
-      - name: Download artifacts
+      - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
           name: go-app
 
-      - name: Copy to Server
-        run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} app.tar.gz arioprima@103.127.97.105:/var/www/golang/letitbe/letitbe/
-
-      - name: Extract on Server
-        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "tar -xzf /var/www/golang/letitbe/letitbe/app.tar.gz -C /var/www/golang/letitbe/letitbe/"
-
-      - name: Restart the Application
-        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "systemctl restart your-app.service"
+      - name: 'Deploy to Azure WebApp'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ runner.workspace }}/go-app/app.tar.gz # Update the path to the artifact
