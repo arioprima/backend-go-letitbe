@@ -28,7 +28,7 @@ jobs:
       - name: Deploy
         run: |
           echo "$YOUR_SSH_PRIVATE_KEY" > letitbe.pem
-          chmod 600 deploy_key.pem
+          chmod 600 letitbe.pem
           mkdir -p $HOME/.ssh
           touch $HOME/.ssh/known_hosts
           ssh-keyscan -H 103.127.97.105 >> $HOME/.ssh/known_hosts
