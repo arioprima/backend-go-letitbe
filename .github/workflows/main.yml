@@ -29,6 +29,7 @@ jobs:
         run: |
           echo "$YOUR_SSH_PRIVATE_KEY" > deploy_key.pem
           chmod 600 deploy_key.pem
+          ssh-keyscan -H 103.127.97.105 >> $HOME/.ssh/known_hosts
           ssh -i deploy_key.pem arioprima@103.127.97.105 "cd /var/www/golang/letitbe/letitbe/ && ./main"
         env:
           YOUR_SSH_PRIVATE_KEY: |
