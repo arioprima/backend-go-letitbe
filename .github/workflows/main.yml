@@ -16,26 +16,35 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.21.1
+          go-version: 1.21.1 # Sesuaikan versi Go yang Anda gunakan
 
       - name: Build
         run: go build -o main
 
+      - name: Archive artifacts
+        run: tar -czf app.tar.gz main
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: go-app
+          path: app.tar.gz
+
   deploy:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy
-        run: |
-          echo "$YOUR_SSH_PRIVATE_KEY" > letitbe.pem
-          chmod 600 letitbe.pem
-          mkdir -p $HOME/.ssh
-          touch $HOME/.ssh/known_hosts
-          ssh-keyscan -H 103.127.97.105 >> $HOME/.ssh/known_hosts
-          ssh -i letitbe.pem arioprima@103.127.97.105 "cd /var/www/golang/letitbe/letitbe/ && ./main"
-        env:
-          YOUR_SSH_PRIVATE_KEY: |
-            -----BEGIN OPENSSH PRIVATE KEY-----
-            ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOF8fffH3dlr9hLXLQ+LU1igzfg7ROJ/b0u9AUQ0P0aSsYYXsiUMWI+Yg0tuiSBNGYeZcDUiBAHZ33CeBK4o+mpTcPENN+EFbjlwyqME22jyvm2cwV/GZX9ZhemMZBuwg8RzKseVcYTkr/i3dY40ulAYLuWZU0G+uhYzDb1+KuDOeDHvDoVFj3qT3g3DRHzKw9hsYCtd4wXd9hoAqGLr2aFaHRK5OGJbV9Bb9/auAmv/2BicmDC2WzQL+oWNPfkbyG6pS+NSp2pHZsBq3bBMNs6NPRuuDdejDLtxvs3ZFh4HkRPMlvJnhSn6/6k0OD530L68l1/labkGYtxzhw6Psb
-            -----END OPENSSH PRIVATE KEY-----
+    runs-on: ubuntu-latest  # Gunakan runner Ubuntu atau sesuaikan dengan yang sesuai
 
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: go-app
+
+      - name: Copy to Server
+        run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} app.tar.gz arioprima@103.127.97.105:/var/www/golang/letitbe/letitbe/
+
+      - name: Extract on Server
+        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "tar -xzf /var/www/golang/letitbe/letitbe/app.tar.gz -C /var/www/golang/letitbe/letitbe/"
+
+      - name: Restart the Application
+        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "systemctl restart your-app.service"
