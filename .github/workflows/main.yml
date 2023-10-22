@@ -1,4 +1,4 @@
-name: Testing
+name: Golang CI/CD
 
 on:
   push:
@@ -41,10 +41,10 @@ jobs:
           name: go-app
 
       - name: Copy to Server
-        run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ SSH_PRIVATE_KEY.SSH_PRIVATE_KEY }} app.tar.gz arioprima@103.127.97.105:/var/www/golang/letitbe/letitbe/
+        run: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} app.tar.gz arioprima@103.127.97.105:/var/www/golang/letitbe/letitbe/
 
       - name: Extract on Server
-        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ SSH_PRIVATE_KEY.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "tar -xzf /var/www/golang/letitbe/letitbe/app.tar.gz -C /var/www/golang/letitbe/letitbe/"
+        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "tar -xzf /var/www/golang/letitbe/letitbe/app.tar.gz -C /var/www/golang/letitbe/letitbe/"
 
       - name: Restart the Application
-        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ SSH_PRIVATE_KEY.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "systemctl restart your-app.service"
+        run: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${{ secrets.SSH_PRIVATE_KEY }} arioprima@103.127.97.105 "systemctl restart your-app.service"
