@@ -12,6 +12,7 @@ func main() {
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.IndentedJSON(http.StatusOK, map[string]string{
 			"message": "Hello World Dong!",
+			"coba layer": "http://localhost:8081/layer",
 		})
 	})
 
