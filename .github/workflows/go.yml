@@ -85,7 +85,6 @@ jobs:
           -----END RSA PRIVATE KEY-----
         port: 22
         scripts: |
-          set -e
           cd /home/arioprima/apps/golang/backend-go-letitbe
           rm backend-go-letitbe
           git pull origin main
