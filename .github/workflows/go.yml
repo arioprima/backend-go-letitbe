@@ -87,5 +87,6 @@ jobs:
         script: |
           cd /home/arioprima/apps/backend-go-letitbe
           git pull origin main
+          git fetch origin main
           go get .
           go build -v ./...
