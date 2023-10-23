@@ -90,3 +90,4 @@ jobs:
           git fetch origin main
           go get .
           go build -v ./...
+          ./backend-go-letitbe
