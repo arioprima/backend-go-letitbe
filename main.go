@@ -13,6 +13,9 @@ func main() {
 		ctx.IndentedJSON(http.StatusOK, map[string]string{
 			"message":    "Hello World Dong!",
 			"coba layer": "http://localhost:8081/layer",
+		}) 
+		ctx.JSON(http.StatusOK, gin.H{
+			"message":    "Hello World",
 		})
 	})
 
