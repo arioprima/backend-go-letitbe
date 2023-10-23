@@ -22,6 +22,10 @@ func main() {
 			"message":    "Belajar CI/CD",
 			"coba layer": "http://localhost:8081/belajar/cicd",
 		})
+		ctx.JSON(http.StatusOK, gin.H{
+			"message":    "Belajar NGINX/CD",
+			"coba layer": "http://localhost:8081/belajar/cicd",
+		})
 	})
 
 	err := router.Run(":8081")
