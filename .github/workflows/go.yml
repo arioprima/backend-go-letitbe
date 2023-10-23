@@ -86,8 +86,8 @@ jobs:
         port: 22
         script: |
           cd /home/arioprima/apps/golang/backend-go-letitbe
+          rm backend-go-letitbe
           git pull origin main
-          git fetch origin main
           go get .
-          go build -v ./...
+          go build .
           ./backend-go-letitbe
