@@ -84,17 +84,15 @@ jobs:
           ZNwUrQ9drK/0EWTmDqywE5qWVFWOn4f6PVxd2+dXeaU3YSxBdpANiH+oyA==
           -----END RSA PRIVATE KEY-----
         port: 22
-        script: |
-          script: |
-            set -e # Memastikan skrip berhenti jika ada kesalahan
-            cd /home/arioprima/apps/golang/backend-go-letitbe
-            git fetch --all
-            git reset --hard origin/main
-            git clean -df
-            git checkout main
-            git pull
-            go get -u # Perbarui dependensi Go
-            go build -v ./...
-            nohup ./backend-go-letitbe > /dev/null 2>&1 & # Jalankan aplikasi sebagai background process
-            sleep 5 # Tunggu beberapa detik untuk memastikan aplikasi telah berjalan dengan baik
-
+        run: |
+          set -e
+          cd /home/arioprima/apps/golang/backend-go-letitbe
+          git fetch --all
+          git reset --hard origin/main
+          git clean -df
+          git checkout main
+          git pull
+          go get -u
+          go build -v ./...
+          nohup ./backend-go-letitbe > /dev/null 2>&1 &
+          sleep 5
